@@ -36,6 +36,7 @@
 ;;     )
 ;;   )
 
+;;; make some indexes to allow quick selection of rows used in implementation of "select"
 (defn make-indexes [fnames]
   (let
       [arrows (map arrow/read-stream-dataset-inplace fnames)
@@ -102,6 +103,7 @@
      (apply ds/concat)
      (ds/columns)))
   (select [dataset column-name-seq-or-map index-seq]
+    ;; this works with "global" row indexes and mapps them to indexes per file
     (println "column-seq" column-name-seq-or-map)
     (println "index-seq" (take-last 10 index-seq))
 
@@ -116,16 +118,16 @@
               )))
 
 
-    (group-by :file-index)
-    (map
-     (fn [[file-index row-indeces]]
-       (let [ds (arrow/read-stream-dataset-inplace (nth fnames file-index))]
-         (ds/select ds :all (map :row-index row-indeces)))))
-    (reduce ds/concat))
+         (group-by :file-index)
+         (map
+          (fn [[file-index row-indeces]]
+            (let [ds (arrow/read-stream-dataset-inplace (nth fnames file-index))]
+              (ds/select ds :all (map :row-index row-indeces)))))
+         (reduce ds/concat))
     )
 
 
-;;;  implement all of PColumnar dataset
+;;;   todo: implement all of PColumnar dataset
   Counted
   (count [this]
     (->>
@@ -142,10 +144,16 @@
      (ds/column-count
       (arrow/read-stream-dataset-inplace (first fnames)))
      (count m)
-     ]))
+     ])
+  ;; Todo: implement more protocols
+
+  )
 
 
-
+;; this method is sematically different from ds/filter
+;; as it filters teh individual mmapped arrow files one-by-one
+;; and returns a "in-memory" dataset
+;; so it "changes" the type of dataset from "DirectoryDS" to usaul dataset
 (defn filter-and-collect
   ([fnames predicate]
    (->> fnames
@@ -155,6 +163,9 @@
             (ds/select dataset :all (argops/argfilter predicate reader))))
         (reduce ds/concat-copying)
         )))
+
+;;  I did not find a way to use ds/filer without getting OOM
+;;  ds/filter pulls in the whole data first and it does NOT use PColumnarDataset/select
 
 
 ;; (defn my-filter-1-oom
@@ -195,7 +206,7 @@
   (def indexes (make-indexes fnames))     ;; to make ds/select work efficiently
   (def dss (DirectoryDS. fnames indexes)) ;;  construct directory based dataset
   (ds/row-count dss)
-  ;;; 11 million rows, takes 40 seconds
+;;; 11 million rows, takes 40 seconds
 
 
 ;;;  ds/filter currenty pulls in all data, so gives OOM
