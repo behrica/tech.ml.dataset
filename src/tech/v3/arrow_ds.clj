@@ -9,6 +9,7 @@
             [tech.v3.datatype.protocols :as dtype-proto]
             [clojure.java.io :as io]
             [tech.v3.datatype.argops :as argops]
+            [clojure.string :as str]
 
             )
   (:import [clojure.lang Counted])
@@ -233,3 +234,19 @@
 
   ;; (ds/filter big #(= "no-cc" (get % "license")))
   )
+(comment
+  (def fnames (->> (file-seq (io/file "/tmp/by-refid-arrow/"))
+                   (filter #(.isFile %))
+                   (map #(.getPath %))
+                   (filter #(str/ends-with? % ".ipc" ))
+                   ))
+
+  (arrow/visualize-arrow-stream (first fnames))
+
+  (arrow/stream->dataset-seq-copying  "/tmp/abstracts.arrow"))
+
+(arrow/stream->dataset-seq-inplace "/tmp/by-refid-arrow/user=Celine.DUMAS/is.primary=yes/part-64.feather")
+
+
+
+(tech.)
