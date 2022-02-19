@@ -42,6 +42,8 @@
                                com.fasterxml.jackson.core/jackson-databind
                                org.slf4j/slf4j-api]
                   :scope "provided"]
+                 [uk.ac.starlink/jarrow "1.0" :scope "provided"]
+
                  [org.lz4/lz4-java "1.8.0" :scope "provided"]
 
                  [uncomplicate/neanderthal "0.43.3" :scope "provided"]
