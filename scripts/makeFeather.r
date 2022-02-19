@@ -9,6 +9,7 @@ data$x2 <- as.character(data$x2)
 data$x3 <- as.integer(data$x3)
 data$x4 <- as.numeric(c(8.0,9.0,10.0,11.0))
 data$x5 <- as.POSIXct("1/1/2020")
+data$x6 <- c(T,F)
 
 arrow::write_feather(data,"/tmp/data.feather_arrow")
 feather::write_feather(data,"/tmp/data.feather_feather")
