@@ -19,6 +19,22 @@
   writing a sequence of datasets downstream schemas must be compatible with the schema
   of the initial dataset so for instance a conversion of int32 to double is fine but
   double to int32 is not.
+  Sometimes these files are refered to as 'feather' (V2) files. 
+  
+  They file can be read in pythan like this:
+  
+```python
+    import pyarrow.feather as feather
+    feather.read_feather('test.ipc")
+```
+   and in R like this
+
+```R
+     arrow::read_feather('test.ipc')
+``` 
+
+ 
+  
 
   mmap support on systems running JDK-17 requires the foreign or memory module to be
   loaded.  Appropriate JVM arguments can be found
