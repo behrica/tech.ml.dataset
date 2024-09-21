@@ -1,3 +1,7 @@
+![CI](https://github.com/techascent/tech.ml.dataset/actions/workflows/test.yml/badge.svg)
+![CI devcontainer](https://github.com/techascent/tech.ml.dataset/actions/workflows/test-devcontainer.yml/badge.svg)
+[![Clojars Project](https://img.shields.io/clojars/v/scicloj/sklearn-clj.svg)](https://clojars.org/scicloj/sklearn-clj)
+
 # tech.ml.dataset
 
 ![TMD Logo](logo.png "TMD")
